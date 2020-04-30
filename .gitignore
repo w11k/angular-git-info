@@ -2,6 +2,7 @@
 src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
+!src/git-info/files/**/*
 
 # IDEs
 .idea/
