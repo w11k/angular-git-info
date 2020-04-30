@@ -1,5 +1,5 @@
 {
-  "name": "git-info",
+  "name": "@w11k/git-info",
   "version": "0.0.0",
   "description": "A blank schematics",
   "scripts": {
@@ -11,9 +11,10 @@
     "dev": "schematics .:git-info --debug=false"
   },
   "keywords": [
-    "schematics"
+    "schematics",
+    "angular"
   ],
-  "author": "",
+  "author": "Kai Henzler",
   "license": "MIT",
   "schematics": "./src/collection.json",
   "dependencies": {
@@ -26,5 +27,14 @@
     "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
     "jasmine": "^3.5.0"
-  }
+  },
+  "main": "src/git-info/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w11k/angular-git-info.git"
+  },
+  "bugs": {
+    "url": "https://github.com/w11k/angular-git-info/issues"
+  },
+  "homepage": "https://github.com/w11k/angular-git-info#readme"
 }

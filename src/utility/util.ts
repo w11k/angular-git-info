@@ -1,8 +1,8 @@
-import { experimental, join, JsonAstObject, JsonParseMode, parseJson, parseJsonAst, Path, } from '@angular-devkit/core';
+import { JsonAstObject, JsonParseMode, parseJsonAst, } from '@angular-devkit/core';
 
 import { SchematicContext, SchematicsException, Tree, } from '@angular-devkit/schematics';
 
-import { DeleteNodeDependency, getPackageJsonDependency, pkgJson, } from './dependencies';
+import { pkgJson, } from './dependencies';
 
 import { appendPropertyInAstObject, findPropertyInAstObject, insertPropertyInAstObjectInOrder, } from './json-utils';
 
@@ -13,128 +13,11 @@ export interface NodePackage {
     version: string;
 }
 
-export enum Paths {
-    AngularJson = './angular.json',
-}
-
 export enum Configs {
     JsonIndentLevel = 4,
 }
 
 export const GIT_IGNORE_FILE = '.gitignore';
-
-export type WorkspaceSchema = experimental.workspace.WorkspaceSchema;
-
-export interface JestOptions {
-    updateTests?: boolean;
-    project?: string;
-    config?: 'file' | 'packagejson' | string;
-    overwrite?: boolean;
-    __version__: number;
-}
-
-export function getAngularVersion(tree: Tree): number {
-    const packageNode = getPackageJsonDependency(tree, '@angular/core');
-
-    const version =
-        packageNode &&
-        packageNode.version.split('').find((char) => !!parseInt(char, 10));
-
-    return version ? +version : 0;
-}
-
-export function getWorkspacePath(host: Tree): string {
-    const possibleFiles = [
-        '/angular.json',
-        '/.angular.json',
-        '/angular-cli.json',
-    ];
-    const path = possibleFiles.filter((path) => host.exists(path))[0];
-
-    return path;
-}
-
-export function getWorkspace(host: Tree): WorkspaceSchema {
-    const path = getWorkspacePath(host);
-    const configBuffer = host.read(path);
-    if (configBuffer === null) {
-        throw new SchematicsException(`Could not find (${path})`);
-    }
-    const content = configBuffer.toString();
-
-    return (parseJson(content, JsonParseMode.Loose) as {}) as WorkspaceSchema;
-}
-
-export function getSourcePath(tree: Tree, options: any): String {
-    const workspace = getWorkspace(tree);
-
-    if (!options.project) {
-        throw new SchematicsException('Option "project" is required.');
-    }
-
-    const project = workspace.projects[options.project];
-
-    if (project.projectType !== 'application') {
-        throw new SchematicsException(
-            `AddJest requires a project type of "application".`
-        );
-    }
-
-    // const assetPath = join(project.root as Path, 'src', 'assets');
-    const sourcePath = join(project.root as Path, 'src');
-
-    return sourcePath;
-}
-
-// modified version from utility/dependencies/getPackageJsonDependency
-export function removePackageJsonDependency(
-    tree: Tree,
-    dependency: DeleteNodeDependency
-): void {
-    const packageJsonAst = parseJsonAtPath(tree, pkgJson.Path);
-    const depsNode = findPropertyInAstObject(packageJsonAst, dependency.type);
-    const recorder = tree.beginUpdate(pkgJson.Path);
-
-    if (!depsNode) {
-        // Haven't found the dependencies key.
-        new SchematicsException('Could not find the package.json dependency');
-    } else if (depsNode.kind === 'object') {
-        const fullPackageString = depsNode.text.split('\n').filter((pkg) => {
-            return pkg.includes(`"${dependency.name}"`);
-        })[0];
-
-        const commaDangle =
-            fullPackageString && fullPackageString.trim().slice(-1) === ',' ? 1 : 0;
-
-        const packageAst = depsNode.properties.find((node) => {
-            return node.key.value.toLowerCase() === dependency.name.toLowerCase();
-        });
-
-        // TODO: does this work for the last dependency?
-        const newLineIndentation = 5;
-
-        if (packageAst) {
-            // Package found, remove it.
-            const end = packageAst.end.offset + commaDangle;
-
-            recorder.remove(
-                packageAst.key.start.offset,
-                end - packageAst.start.offset + newLineIndentation
-            );
-        }
-    }
-
-    tree.commitUpdate(recorder);
-}
-
-export function safeFileDelete(tree: Tree, path: string): boolean {
-    if (tree.exists(path)) {
-        tree.delete(path);
-        return true;
-    } else {
-        return false;
-    }
-}
 
 export function addPropertyToPackageJson(
     tree: Tree,
@@ -202,37 +85,6 @@ export function addPropertyToGitignore(tree: Tree, _context: SchematicContext, f
     } else {
         _context.logger.debug('no gitignore found');
     }
-}
-
-
-export function getWorkspaceConfig(tree: Tree, options: JestOptions) {
-    const workspace = getWorkspace(tree);
-    const workspacePath = getWorkspacePath(tree);
-    let projectName;
-    let projectProps;
-
-    if (options.__version__ >= 6) {
-        projectName = options.project || workspace.defaultProject || '';
-        projectProps = workspace.projects[projectName];
-    } else if (options.__version__ < 6) {
-        projectName = (workspace as any).project.name || '';
-        projectProps = (workspace as any).apps[0];
-    }
-
-    return {projectProps, workspacePath, workspace, projectName};
-}
-
-/**
- * Angular5 (angular-cli.json) config is formatted into an array of applications vs Angular6's (angular.json) object mapping
- * multi-app Angular5 apps are currently not supported.
- *
- * @param tree
- * @param options
- */
-export function isMultiAppV5(tree: Tree, options: JestOptions) {
-    const config = getWorkspaceConfig(tree, options);
-
-    return options.__version__ < 6 && (config.workspace as any).apps.length > 1;
 }
 
 /**

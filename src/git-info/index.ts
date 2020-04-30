@@ -1,14 +1,7 @@
 import { apply, chain, mergeWith, move, Rule, SchematicContext, Tree, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-import {
-    addPropertyToGitignore,
-    addPropertyToPackageJson,
-    getAngularVersion,
-    getLatestNodeVersion,
-    JestOptions,
-    NodePackage,
-} from '../utility/util';
+import { addPropertyToGitignore, addPropertyToPackageJson, getLatestNodeVersion, NodePackage, } from '../utility/util';
 
 import { addPackageJsonDependency, NodeDependencyType } from '../utility/dependencies';
 
@@ -16,10 +9,8 @@ import { concat, Observable, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 
 
-export function gitInfo(options: JestOptions): Rule {
+export function gitInfo(): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        options = {...options, __version__: getAngularVersion(tree)};
-
         return chain([
             updateDependencies(),
             addVersionGeneratorFile(),
