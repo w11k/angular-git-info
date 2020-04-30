@@ -4,7 +4,7 @@ This schematic fro the angular-cli let's you easily setup a workflow that allows
 
 ## Installation
 
-Check the documentation with
+Add this schematic to your project using the `ng add` command
 ```bash
 ng add @w11k/git-info
 ```

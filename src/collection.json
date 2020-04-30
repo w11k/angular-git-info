@@ -2,7 +2,15 @@
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "git-info": {
-      "description": "A blank schematic.",
+      "description": "Adds the git version info to your project",
+      "factory": "./git-info/index#gitInfo"
+    },
+    "ng-add": {
+      "description": "Adds the git version info to your project",
+      "factory": "./git-info/index#gitInfo"
+    },
+    "add": {
+      "description": "Adds the git version info to your project",
       "factory": "./git-info/index#gitInfo"
     }
   }
