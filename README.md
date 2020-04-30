@@ -67,3 +67,7 @@ export class AppComponent {
   }
 }
 ```
+
+## Acknowledgement
+- Idea and Code heavily inspired by this [blog post](https://medium.com/@amcdnl/version-stamping-your-app-with-the-angular-cli-d563284bb94d)
+- Angular schematic implementation heavily inspired by [jest-schematic](https://github.com/briebug/jest-schematic)
