@@ -31,6 +31,7 @@ After each `npm install` we trigger the npm-hook to update the automatically gen
 This is a normal Typescript file that simply exports a constant. It is very important that this file in not committed to the git-repo.
 The file looks similar to this:
 
+
 ```typescript
 // IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
 /* tslint:disable */
