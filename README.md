@@ -1,6 +1,7 @@
 # @w11k/git-info
 
-This schematic fro the angular-cli let's you easily setup a workflow that allows you to access the git-information in your Angular App
+This schematic fro the angular-cli let's you easily setup a workflow that allows you to access the git-information in your Angular App.
+Read our detailed [blog post](https://www.thecodecampus.de/blog/display-the-version-and-git-hash-in-angular) about the topic.
 
 ## Installation
 
