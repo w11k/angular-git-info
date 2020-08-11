@@ -79,7 +79,7 @@ function addScriptsToPackageJson(): Rule {
 
 function addVersionGeneratorToGitignore(): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        addPropertyToGitignore(tree, context, 'environments/version.ts');
+        addPropertyToGitignore(tree, context, 'src/environments/version.ts');
         return tree;
     };
 }
