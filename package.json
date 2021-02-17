@@ -1,6 +1,6 @@
 {
   "name": "@w11k/git-info",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A blank schematics",
   "scripts": {
     "schematics": "schematics",
