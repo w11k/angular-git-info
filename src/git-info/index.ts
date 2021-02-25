@@ -1,12 +1,12 @@
 import { apply, chain, mergeWith, move, Rule, SchematicContext, Tree, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-
-import { addPropertyToGitignore, addPropertyToPackageJson, getLatestNodeVersion, NodePackage, } from '../utility/util';
-
-import { addPackageJsonDependency, NodeDependencyType } from '../utility/dependencies';
-
 import { concat, Observable, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
+import { addPackageJsonDependency, NodeDependencyType } from '../utility/dependencies';
+import { addPropertyToGitignore, addPropertyToPackageJson, getLatestNodeVersion, NodePackage } from '../utility/util';
+
+
+
 
 
 export function gitInfo(): Rule {
@@ -25,10 +25,10 @@ function updateDependencies(): Rule {
         context.logger.debug('Updating dependencies...');
         context.addTask(new NodePackageInstallTask());
 
-        const fixedDependencies = of({name: 'fs-extra', version: '6.0.1'})
+        const fixedDependencies = of({ name: 'fs-extra', version: '6.0.1' })
             .pipe(
                 map((packageFromRegistry: NodePackage) => {
-                    const {name, version} = packageFromRegistry;
+                    const { name, version } = packageFromRegistry;
                     context.logger.debug(`Adding ${name}:${version} to ${NodeDependencyType.Dev}`);
 
                     addPackageJsonDependency(tree, {
@@ -43,7 +43,7 @@ function updateDependencies(): Rule {
         const addLatestDependencies = of('git-describe').pipe(
             concatMap((packageName: string) => getLatestNodeVersion(packageName)),
             map((packageFromRegistry: NodePackage) => {
-                const {name, version} = packageFromRegistry;
+                const { name, version } = packageFromRegistry;
                 context.logger.debug(`Adding ${name}:${version} to ${NodeDependencyType.Dev}`);
 
                 addPackageJsonDependency(tree, {
@@ -80,6 +80,7 @@ function addScriptsToPackageJson(): Rule {
 function addVersionGeneratorToGitignore(): Rule {
     return (tree: Tree, context: SchematicContext) => {
         addPropertyToGitignore(tree, context, 'src/environments/version.ts');
+        addPropertyToGitignore(tree, context, '*/environments/version.ts');
         return tree;
     };
 }

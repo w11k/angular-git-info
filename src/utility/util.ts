@@ -1,12 +1,12 @@
-import { JsonAstObject, JsonParseMode, parseJsonAst, } from '@angular-devkit/core';
-
-import { SchematicContext, SchematicsException, Tree, } from '@angular-devkit/schematics';
-
-import { pkgJson, } from './dependencies';
-
-import { appendPropertyInAstObject, findPropertyInAstObject, insertPropertyInAstObjectInOrder, } from './json-utils';
-
+import { JsonAstObject, JsonParseMode, parseJsonAst } from '@angular-devkit/core';
+import { SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { get } from 'http';
+import { pkgJson } from './dependencies';
+import { appendPropertyInAstObject, findPropertyInAstObject, insertPropertyInAstObjectInOrder } from './json-utils';
+
+
+
+
 
 export interface NodePackage {
     name: string;
@@ -58,7 +58,7 @@ export function addPropertyToPackageJson(
                 // script found, overwrite value
                 context.logger.debug(`overwriting ${key} with ${value}`);
 
-                const {end, start} = innerNode;
+                const { end, start } = innerNode;
 
                 recorder.remove(start.offset, end.offset - start.offset);
                 recorder.insertRight(start.offset, JSON.stringify(value));
@@ -77,11 +77,15 @@ export function addPropertyToGitignore(tree: Tree, _context: SchematicContext, f
         }
 
         const content = buffer.toString();
-        _context.logger.debug('gitignore content' + content);
+        if (content.includes(file)) {
+            _context.logger.debug('gitignore already includes "' + file + '"');
+        } else {
+            _context.logger.debug('gitignore content' + content);
 
-        const updatedContent = `${content}\n${file}`;
+            const updatedContent = `${content}\n${file}`;
 
-        tree.overwrite(GIT_IGNORE_FILE, updatedContent);
+            tree.overwrite(GIT_IGNORE_FILE, updatedContent);
+        }
     } else {
         _context.logger.debug('no gitignore found');
     }
@@ -113,7 +117,7 @@ export function getLatestNodeVersion(packageName: string): Promise<NodePackage> 
     });
 
     function buildPackage(name: string, version: string = DEFAULT_VERSION): NodePackage {
-        return {name, version};
+        return { name, version };
     }
 }
 
