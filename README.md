@@ -69,6 +69,12 @@ export class AppComponent {
 }
 ```
 
+### Automatically bump the version number
+To update the version number every time your CI/CD publishes an update to production use
+``` bash 
+npm version patch
+```
+
 ## Acknowledgement
 - Idea and Code heavily inspired by this [blog post](https://medium.com/@amcdnl/version-stamping-your-app-with-the-angular-cli-d563284bb94d)
 - Angular schematic implementation heavily inspired by [jest-schematic](https://github.com/briebug/jest-schematic)
